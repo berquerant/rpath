@@ -36,10 +36,15 @@ func main() {
 		column  = flag.Int("column", 0, "Column number of target, 1-based")
 		offset  = flag.Int("offset", -1, "Offset of target, 0-based")
 		verbose = flag.Bool("verbose", false, "Verbose output")
+		debug   = flag.Bool("debug", false, "Enable debug logs")
 	)
 
 	flag.Usage = Usage
 	flag.Parse()
+
+	if *debug {
+		rpath.EnableDebug()
+	}
 
 	var (
 		category = flag.Arg(0)

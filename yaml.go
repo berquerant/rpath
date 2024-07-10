@@ -3,6 +3,7 @@ package rpath
 import (
 	"fmt"
 	"io"
+	"log"
 	"slices"
 
 	"github.com/berquerant/ybase"
@@ -101,18 +102,30 @@ type yamlNodePair struct {
 }
 
 func (m yamlPathMap) find(offset int) (*yamlNodePair, bool) {
-	var result *yamlPathEntry
+	var (
+		result    *yamlPathEntry
+		setResult = func(r *yamlPathEntry) {
+			result = r
+			OnDebug(func() {
+				log.Printf("Find yaml node pair: [%s] [%s]",
+					describeYamlNode(r.nodes[0]),
+					describeYamlNode(r.nodes[1]),
+				)
+			})
+		}
+	)
+
 	for _, e := range m {
 		if !(e.valid() && e.in(offset)) {
 			continue
 		}
 		if result == nil {
-			result = e
+			setResult(e)
 			continue
 		}
 		if e.size() < result.size() {
 			// more specific
-			result = e
+			setResult(e)
 		}
 	}
 
@@ -129,6 +142,10 @@ func (m yamlPathMap) add(node ast.Node) {
 	if node.GetToken() == nil || node.GetToken().Position == nil {
 		return
 	}
+
+	OnDebug(func() {
+		log.Printf("Yaml: %s", describeYamlNode(node))
+	})
 
 	path := node.GetPath()
 	e, ok := m[path]
@@ -169,4 +186,14 @@ type yamlPathCollector struct {
 func (v *yamlPathCollector) Visit(node ast.Node) ast.Visitor {
 	v.pathMap.add(node)
 	return v
+}
+
+func describeYamlNode(node ast.Node) string {
+	return fmt.Sprintf("node[%s] %d:%d(%d) %s",
+		node.GetPath(),
+		node.GetToken().Position.Line,
+		node.GetToken().Position.Column,
+		node.GetToken().Position.Offset,
+		node.Type(),
+	)
 }
