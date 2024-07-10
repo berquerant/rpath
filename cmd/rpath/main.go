@@ -62,7 +62,6 @@ func main() {
 
 	if err := runner.run(); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		Usage()
 		os.Exit(1)
 	}
 }
