@@ -78,6 +78,20 @@ func TestEndToEnd(t *testing.T) {
 				want:   `$.spec.texts[1]`,
 			},
 			{
+				title:  "value tail",
+				line:   7,
+				column: 12,
+				offset: -1,
+				want:   `$.spec.text2`,
+			},
+			{
+				title:  "value head",
+				line:   7,
+				column: 10,
+				offset: -1,
+				want:   `$.spec.text2`,
+			},
+			{
 				title:  "offset",
 				offset: 33,
 				want:   `$.metadata`,

@@ -76,7 +76,7 @@ func newYamlPathMap(root ast.Node, yBytes ybase.Bytes) yamlPathMap {
 		yBytes:  yBytes,
 	}
 	ast.Walk(c, root)
-	r.fillArrayElementPairs()
+	r.fillElementPairs()
 	return r
 }
 
@@ -232,12 +232,14 @@ func (m *yamlPathMap) find(offset int) (*yamlNodePair, bool) {
 	return nil, false
 }
 
-// There are not enough pairs of nodes in the offset range for the array elements, so complement them.
+// There are not enough pairs of nodes in the offset range, so complement them.
 //
+// - Add pair of not array element and closest next node
+// - Add pair of first array element and closest next node
 // - Add pair of first array element and closest previous node
 // - Add pair of last array element and closest next node
-// - Add pair of not first array element and closest previous array element
-func (m *yamlPathMap) fillArrayElementPairs() {
+// - Add pair of not first array element and closest next array element
+func (m *yamlPathMap) fillElementPairs() {
 	yamlNodes := []*yamlNode{}
 	for _, n := range m.d {
 		yamlNodes = append(yamlNodes, n.nodes...)
@@ -335,6 +337,11 @@ func (m *yamlPathMap) fillArrayElementPairs() {
 				})
 			}
 
+			if !node.isArrayElement {
+				addResult(findClosestNodeExcpetSamePath(node, findClosestNextNode), -1)
+				return &r
+			}
+
 			// node.offset is at the beginning of the value, at `v`
 			// - value
 			// so range (node, next_node) is [ to ]:
@@ -358,11 +365,11 @@ func (m *yamlPathMap) fillArrayElementPairs() {
 		}
 	)
 
-	for _, n := range arrayElementNodes {
+	for _, n := range yamlNodes {
 		r := getElementPair(n)
 		for _, x := range r.pairs {
 			OnDebug(func() {
-				log.Printf("Yaml: fillArray: %s -> %s | %s",
+				log.Printf("Yaml: fillNodes: %s -> %s | %s",
 					describeYamlNode(n),
 					describeYamlNode(x.found),
 					describeYamlNode(x.origin))
