@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Text
+metadata:
+  name: sometext
+spec:
+  text1: テキスト
+  text2: text
+  texts:
+    - t1
+    - t2
+  text3: under
+  texts2:
+    - x11
+    - |
+      x21
+      x22
+  texts3:
+    - |
+      x31
+      x32
+  text4: les

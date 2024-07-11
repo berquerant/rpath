@@ -2,7 +2,6 @@ package main_test
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -20,26 +19,7 @@ func TestEndToEnd(t *testing.T) {
 	}
 
 	t.Run("yaml", func(t *testing.T) {
-		const document = `apiVersion: v1
-kind: Text
-metadata:
-  name: sometext
-spec:
-  text1: テキスト
-  text2: text`
-		docFile := fmt.Sprintf("%s/document.yml", t.TempDir())
-		if err := func() error {
-			f, err := os.Create(docFile)
-			if err != nil {
-				return err
-			}
-			defer f.Close()
-			_, err = io.WriteString(f, document)
-			return err
-		}(); err != nil {
-			t.Fatal(err)
-			return
-		}
+		const docFile = "./test/test.yaml"
 
 		for _, tc := range []struct {
 			title  string
@@ -48,6 +28,55 @@ spec:
 			offset int
 			want   string
 		}{
+			{
+				title:  "array element document2",
+				line:   20,
+				column: 7,
+				offset: -1,
+				want:   `$.spec.texts3[0]`,
+			},
+			{
+				title:  "array element document line2",
+				line:   16,
+				column: 6,
+				offset: -1,
+				want:   `$.spec.texts2[1]`,
+			},
+			{
+				title:  "array element document line1",
+				line:   15,
+				column: 6,
+				offset: -1,
+				want:   `$.spec.texts2[1]`,
+			},
+			{
+				title:  "after array",
+				line:   11,
+				column: 4,
+				offset: -1,
+				want:   `$.spec.text3`,
+			},
+			{
+				title:  "array element0 tail",
+				line:   9,
+				column: 8,
+				offset: -1,
+				want:   `$.spec.texts[0]`,
+			},
+			{
+				title:  "array element0 head",
+				line:   9,
+				column: 7,
+				offset: -1,
+				want:   `$.spec.texts[0]`,
+			},
+			{
+				title:  "array element1",
+				line:   10,
+				column: 7,
+				offset: -1,
+				want:   `$.spec.texts[1]`,
+			},
 			{
 				title:  "offset",
 				offset: 33,
@@ -69,16 +98,20 @@ spec:
 			},
 		} {
 			t.Run(tc.title, func(t *testing.T) {
-				out, err := exec.Command(
+				cmd := exec.Command(
 					e.cmd,
 					"-line", fmt.Sprint(tc.line),
 					"-column", fmt.Sprint(tc.column),
 					"-offset", fmt.Sprint(tc.offset),
+					// "-debug",
 					"yaml",
 					docFile,
-				).Output()
+				)
+				cmd.Stderr = os.Stderr
+				out, err := cmd.Output()
 				assert.Nil(t, err)
-				assert.Equal(t, tc.want, string(out))
+				assert.Equal(t, tc.want, string(out),
+					"%d:%d[%d]", tc.line, tc.column, tc.offset)
 			})
 		}
 	})
