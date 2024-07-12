@@ -289,7 +289,7 @@ func (m *yamlPathMap) fillElementPairs() {
 			return yamlNodes[len(yamlNodes)-1], false
 		}
 
-		findClosestNodeExcpetSamePath = func(node *yamlNode, findClosest func(int) (*yamlNode, bool)) *yamlNode {
+		findClosestNodeExceptSamePath = func(node *yamlNode, findClosest func(int) (*yamlNode, bool)) *yamlNode {
 			offset := node.offset
 			for {
 				x, ok := findClosest(offset)
@@ -338,7 +338,7 @@ func (m *yamlPathMap) fillElementPairs() {
 			}
 
 			if !node.isArrayElement {
-				addResult(findClosestNodeExcpetSamePath(node, findClosestNextNode), -1)
+				addResult(findClosestNodeExceptSamePath(node, findClosestNextNode), -1)
 				return &r
 			}
 
@@ -349,12 +349,12 @@ func (m *yamlPathMap) fillElementPairs() {
 			// - ]next_node
 			switch node.arrayIndex {
 			case 0:
-				addResult(findClosestNodeExcpetSamePath(node, findClosestNextNode), -1)
+				addResult(findClosestNodeExceptSamePath(node, findClosestNextNode), -1)
 				if arrayElementMaxIndexMap[node.arrayPath] == 0 {
-					addResult(findClosestNodeExcpetSamePath(node, findClosestPreviousNode), 1)
+					addResult(findClosestNodeExceptSamePath(node, findClosestPreviousNode), 1)
 				}
 			case arrayElementMaxIndexMap[node.arrayPath]:
-				addResult(findClosestNodeExcpetSamePath(node, findClosestNextNode), -1)
+				addResult(findClosestNodeExceptSamePath(node, findClosestNextNode), -1)
 			default:
 				if x, ok := getArrayElement(node, 1); ok {
 					addResult(x, -1)
