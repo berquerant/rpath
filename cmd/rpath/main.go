@@ -113,7 +113,7 @@ func (r runner) run() error {
 		if b, err = json.Marshal(result); err != nil {
 			return fmt.Errorf("%w: failed to marshal result", err)
 		}
-		fmt.Printf("%s\n", b)
+		fmt.Printf("%s", b)
 		return nil
 	}
 	fmt.Print(result.Path)
