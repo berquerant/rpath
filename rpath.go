@@ -22,6 +22,14 @@ type Position struct {
 	Offset int `json:"offset"`
 }
 
+func (p Position) Clone() *Position {
+	return &Position{
+		Line:   p.Line,
+		Column: p.Column,
+		Offset: p.Offset,
+	}
+}
+
 func (p *Position) Fill(b ybase.Bytes) error {
 	if p.Line < 1 || p.Column < 1 {
 		l, c, ok := b.LineColumn(p.Offset)
@@ -38,6 +46,24 @@ func (p *Position) Fill(b ybase.Bytes) error {
 	}
 	p.Offset = offset
 	return nil
+}
+
+func NewFirstPosition() *Position {
+	return &Position{
+		Line:   1,
+		Column: 1,
+		Offset: 0,
+	}
+}
+
+func NewLastPosition(bytes ybase.Bytes) *Position {
+	offset := len(bytes) - 1
+	line, column, _ := bytes.LineColumn(offset)
+	return &Position{
+		Line:   line,
+		Column: column,
+		Offset: offset,
+	}
 }
 
 type Result struct {

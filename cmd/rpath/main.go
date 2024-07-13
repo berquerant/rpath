@@ -19,6 +19,7 @@ Usage:
 
 Available CATEGORY:
 - yaml, yml
+- json
 
 Flags:`
 
@@ -79,6 +80,9 @@ func (r runner) getQueryer() (rpath.Queryer, error) {
 	switch r.category {
 	case "yaml", "yml":
 		var query rpath.YamlQuery
+		return &query, nil
+	case "json":
+		var query rpath.JSONQuery
 		return &query, nil
 	default:
 		return nil, fmt.Errorf("Invalid category: %s", r.category)

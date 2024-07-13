@@ -18,6 +18,103 @@ func TestEndToEnd(t *testing.T) {
 		t.Fatalf("%s help %v", e.cmd, err)
 	}
 
+	t.Run("json", func(t *testing.T) {
+		const docFile = "./test/test.json"
+		for _, tc := range []struct {
+			title  string
+			line   int
+			column int
+			offset int
+			want   string
+		}{
+			{
+				title:  "last key",
+				line:   19,
+				column: 5,
+				offset: -1,
+				want:   `.["spec"]["text3"]`,
+			},
+			{
+				title:  "nested object array",
+				line:   15,
+				column: 11,
+				offset: -1,
+				want:   `.["spec"]["texts"][2]["t4"][0]`,
+			},
+			{
+				title:  "array head tail",
+				line:   11,
+				column: 11,
+				offset: -1,
+				want:   `.["spec"]["texts"][0]`,
+			},
+			{
+				title:  "array head head",
+				line:   11,
+				column: 7,
+				offset: -1,
+				want:   `.["spec"]["texts"][0]`,
+			},
+			{
+				title:  "nested value",
+				line:   5,
+				column: 17,
+				offset: -1,
+				want:   `.["metadata"]["name"]`,
+			},
+			{
+				title:  "offset",
+				offset: 47,
+				want:   `.["metadata"]`,
+			},
+			{
+				title:  "value",
+				line:   3,
+				column: 15,
+				offset: -1,
+				want:   `.["kind"]`,
+			},
+			{
+				title:  "key",
+				line:   3,
+				column: 3,
+				offset: -1,
+				want:   `.["kind"]`,
+			},
+			{
+				title:  "last char",
+				line:   21,
+				column: 1,
+				offset: -1,
+				// FIXME: for now, display the last element encountered
+				want: `.["spec"]["text3"]`,
+			},
+			{
+				title:  "first char",
+				line:   1,
+				column: 1,
+				offset: -1,
+				want:   `.`,
+			},
+		} {
+			t.Run(tc.title, func(t *testing.T) {
+				cmd := exec.Command(
+					e.cmd,
+					"-line", fmt.Sprint(tc.line),
+					"-column", fmt.Sprint(tc.column),
+					"-offset", fmt.Sprint(tc.offset),
+					// "-debug",
+					"json",
+					docFile,
+				)
+				cmd.Stderr = os.Stderr
+				out, err := cmd.Output()
+				assert.Nil(t, err)
+				assert.Equal(t, tc.want, string(out), "%d:%d[%d]", tc.line, tc.column, tc.offset)
+			})
+		}
+	})
+
 	t.Run("yaml", func(t *testing.T) {
 		const docFile = "./test/test.yaml"
 

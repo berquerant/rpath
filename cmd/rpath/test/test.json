@@ -1,0 +1,21 @@
+{
+  "apiVersion": "v1",
+  "kind": "Text",
+  "metadata": {
+    "name": "sometext"
+  },
+  "spec": {
+    "text1": "かな",
+    "text2": "text",
+    "texts": [
+      "t1",
+      "t2",
+      {
+        "t4": [
+          "a"
+        ]
+      }
+    ],
+    "text3": "under"
+  }
+}

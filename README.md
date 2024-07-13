@@ -10,10 +10,13 @@ Usage:
 
 Available CATEGORY:
 - yaml, yml
+- json
 
 Flags:
   -column int
         Column number of target, 1-based
+  -debug
+        Enable debug logs
   -line int
         Line number of target, 1-based
   -offset int
@@ -35,4 +38,21 @@ spec:
   text2: text
 EOS
 $.spec.text1
+```
+
+``` sh
+❯ cat - <<EOS | rpath -line 8 -column 14 json
+{
+  "apiVersion": "v1",
+  "kind": "Text",
+  "metadata": {
+    "name": "sometext"
+  },
+  "spec": {
+    "text1": "テキスト",
+    "text2": "text"
+  }
+}
+EOS
+.["spec"]["text1"]
 ```
