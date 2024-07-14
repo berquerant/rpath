@@ -145,6 +145,17 @@ func (m *PathNodeMap) Add(node Node) {
 	}
 }
 
+func (m PathNodeMap) SortedNodes() []Node {
+	nodes := []Node{}
+	for _, entry := range m.dict {
+		nodes = append(nodes, entry.Nodes...)
+	}
+	slices.SortStableFunc(nodes, func(a, b Node) int {
+		return a.Pos().Offset - b.Pos().Offset
+	})
+	return nodes
+}
+
 type PathNodeComplementor struct {
 	nodeMap         *PathNodeMap
 	nodes           []Node
@@ -295,13 +306,7 @@ func (c PathNodeComplementor) getItemNode(node ItemNode, indexDelta int) (ItemNo
 }
 
 func NewPathNodeComplementor(nodeMap *PathNodeMap) *PathNodeComplementor {
-	nodes := []Node{}
-	for _, entry := range nodeMap.dict {
-		nodes = append(nodes, entry.Nodes...)
-	}
-	slices.SortStableFunc(nodes, func(a, b Node) int {
-		return a.Pos().Offset - b.Pos().Offset
-	})
+	nodes := nodeMap.SortedNodes()
 
 	itemNodes := []ItemNode{}
 	for _, n := range nodes {
