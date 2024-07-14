@@ -43,6 +43,16 @@ func (q *YamlQuery) Query(r io.Reader, p *Position) (*Result, error) {
 		for _, node := range NewPathNodeComplementor(nodeMap).Complement() {
 			nodeMap.Add(node)
 		}
+		// add last node pair to tail of the document
+		// because the last node does not cover the range between the node and tail of the document
+		sortedNodes := nodeMap.SortedNodes()
+		lastNode := sortedNodes[len(sortedNodes)-1].Clone()
+		lastPosition := NewLastPosition(yBytes)
+		lastNode.Pos().Line = lastPosition.Line
+		lastNode.Pos().Column = lastPosition.Column
+		lastNode.Pos().Offset = lastPosition.Offset
+		nodeMap.Add(lastNode)
+
 		if x, ok := nodeMap.Find(p.Offset); ok {
 			meta := x.GetMeta(content)
 			meta["char"] = fmt.Sprintf("%q", content[p.Offset])

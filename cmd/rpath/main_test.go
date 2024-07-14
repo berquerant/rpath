@@ -126,6 +126,13 @@ func TestEndToEnd(t *testing.T) {
 			want   string
 		}{
 			{
+				title:  "last element value",
+				line:   21,
+				column: 12,
+				offset: -1,
+				want:   `$.spec.text4`,
+			},
+			{
 				title:  "array element document2",
 				line:   20,
 				column: 7,
