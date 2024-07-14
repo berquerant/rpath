@@ -153,6 +153,10 @@ type PathNodeComplementor struct {
 	itemMaxIndexMap map[string]int
 }
 
+func (c PathNodeComplementor) getMaxIndex(item ItemNode) int {
+	return c.itemMaxIndexMap[item.ItemPath()]
+}
+
 // Complement generates missing nodes to find nodes by offset.
 func (c PathNodeComplementor) Complement() []Node {
 	result := []Node{}
@@ -195,6 +199,9 @@ func (c PathNodeComplementor) getItemPair(node Node) (result []*pathNodeCompleme
 
 	item, ok := node.(ItemNode)
 	if !ok {
+		OnDebug(func() {
+			log.Printf("Complement: node[%s] getItemPair `not Item` %s", node.Path(), node.Describe())
+		})
 		// add pair of not array element and closest next node
 		addResult(c.findClosestNodeExceptSamePath(node, c.findClosestNextNode), -1)
 		return
@@ -205,19 +212,31 @@ func (c PathNodeComplementor) getItemPair(node Node) (result []*pathNodeCompleme
 	// so range (node, next_node) is [ to ]:
 	// - [node
 	// - ]next_node
-	maxIndex := c.itemMaxIndexMap[node.Path()]
+	maxIndex := c.getMaxIndex(item)
 	switch item.ItemIndex() {
 	case 0:
+		OnDebug(func() {
+			log.Printf("Complement: node[%s] getItemPair `Item 0` Item[%d/%d] %s",
+				item.ItemPath(), item.ItemIndex(), maxIndex, node.Describe())
+		})
 		// add pair of first array element and closest next node
 		addResult(c.findClosestNodeExceptSamePath(node, c.findClosestNextNode), -1)
 		// if maxIndex == 0 {
-		// add pair of first array element and closest previous node
-		// addResult(c.findClosestNodeExceptSamePath(node, c.findClosestPreviousNode), 1)
+		// 	// add pair of first array element and closest previous node
+		// 	addResult(c.findClosestNodeExceptSamePath(node, c.findClosestPreviousNode), 1)
 		// }
 	case maxIndex:
+		OnDebug(func() {
+			log.Printf("Complement: node[%s] getItemPair `Item TAIL` Item[%d/%d] %s",
+				item.ItemPath(), item.ItemIndex(), maxIndex, node.Describe())
+		})
 		// add pair of last array element and closest next node
 		addResult(c.findClosestNodeExceptSamePath(node, c.findClosestNextNode), -1)
 	default:
+		OnDebug(func() {
+			log.Printf("Complement: node[%s] getItemPair `Item MID` Item[%d/%d] %s",
+				item.ItemPath(), item.ItemIndex(), maxIndex, node.Describe())
+		})
 		// add pair of not first nor last array element and closest next array element
 		if x, ok := c.getItemNode(item, 1); ok {
 			addResult(x, -1)
