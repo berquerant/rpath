@@ -7,7 +7,7 @@ require (
 	github.com/berquerant/ybase v0.3.0
 	github.com/goccy/go-yaml v1.11.3
 	github.com/stretchr/testify v1.9.0
-	golang.org/x/vuln v1.1.2
+	golang.org/x/vuln v1.1.3
 )
 
 require (
