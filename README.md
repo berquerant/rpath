@@ -56,3 +56,43 @@ $.spec.text1
 EOS
 .["spec"]["text1"]
 ```
+
+# Tasks
+
+## test
+
+Run unit tests and e2e tests.
+
+``` sh
+go test -v -cover -race ./...
+```
+
+## build
+
+Build executable binary to `dist/rpath`.
+
+``` sh
+go build -trimpath -v -o dist/rpath ./cmd/rpath
+```
+
+## lint
+
+Run linters.
+
+Requires: vet, vuln
+
+## vet
+
+Examine code.
+
+``` sh
+go vet ./...
+```
+
+## vuln
+
+Find vulnerabilities.
+
+``` sh
+go run golang.org/x/vuln/cmd/govulncheck ./...
+```
