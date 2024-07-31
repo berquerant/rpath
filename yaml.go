@@ -3,6 +3,7 @@ package rpath
 import (
 	"fmt"
 	"io"
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -35,23 +36,52 @@ func (q *YamlQuery) Query(r io.Reader, p *Position) (*Result, error) {
 		return nil, err
 	}
 
-	for _, doc := range fileNode.Docs {
-		nodeMap := NewPathNodeMap()
-		for _, node := range newYAMLNodes(doc, yBytes) {
-			nodeMap.Add(node)
+	var (
+		nodeMaps   = make(map[int]*PathNodeMap, len(fileNode.Docs))
+		getNodeMap = func(index int) (*PathNodeMap, bool) {
+			if r, ok := nodeMaps[index]; ok {
+				return r, true
+			}
+			if index < 0 || index >= len(fileNode.Docs) {
+				return nil, false
+			}
+
+			nodeMap := NewPathNodeMap()
+			doc := fileNode.Docs[index]
+			for _, node := range newYAMLNodes(doc, yBytes) {
+				nodeMap.Add(node)
+			}
+			for _, node := range NewPathNodeComplementor(nodeMap).Complement() {
+				nodeMap.Add(node)
+			}
+			// add last node pair to tail of the document
+			// because the last node does not cover the range between the node and tail of the document
+			sortedNodes := nodeMap.SortedNodes()
+			lastNode := sortedNodes[len(sortedNodes)-1].Clone()
+			lastPosition := NewLastPosition(yBytes)
+			lastNode.Pos().Line = lastPosition.Line
+			lastNode.Pos().Column = lastPosition.Column
+			lastNode.Pos().Offset = lastPosition.Offset
+			nodeMap.Add(lastNode)
+
+			nodeMaps[index] = nodeMap
+			return nodeMap, true
 		}
-		for _, node := range NewPathNodeComplementor(nodeMap).Complement() {
-			nodeMap.Add(node)
+	)
+
+	for i := range len(fileNode.Docs) {
+		nodeMap, _ := getNodeMap(i)
+		if nextNodeMap, ok := getNodeMap(i + 1); ok {
+			firstNode := nextNodeMap.SortedNodes()[0]
+			if p.Offset >= firstNode.Pos().Offset {
+				OnDebug(func() {
+					log.Printf("Ignore: Docs[%d], because offset %d is greater than docs[%d]'s first offset %d",
+						i, p.Offset, i+1, firstNode.Pos().Offset,
+					)
+				})
+				continue
+			}
 		}
-		// add last node pair to tail of the document
-		// because the last node does not cover the range between the node and tail of the document
-		sortedNodes := nodeMap.SortedNodes()
-		lastNode := sortedNodes[len(sortedNodes)-1].Clone()
-		lastPosition := NewLastPosition(yBytes)
-		lastNode.Pos().Line = lastPosition.Line
-		lastNode.Pos().Column = lastPosition.Column
-		lastNode.Pos().Offset = lastPosition.Offset
-		nodeMap.Add(lastNode)
 
 		if x, ok := nodeMap.Find(p.Offset); ok {
 			meta := x.GetMeta(content)

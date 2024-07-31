@@ -126,6 +126,27 @@ func TestEndToEnd(t *testing.T) {
 			want   string
 		}{
 			{
+				title:  "address of second document",
+				line:   29,
+				column: 15,
+				offset: -1,
+				want:   `$.spec.address`,
+			},
+			{
+				title:  "kind of second document",
+				line:   24,
+				column: 8,
+				offset: -1,
+				want:   `$.kind`,
+			},
+			{
+				title:  "first char of second document",
+				line:   23,
+				column: 1,
+				offset: -1,
+				want:   `$.apiVersion`,
+			},
+			{
 				title:  "last element value",
 				line:   21,
 				column: 12,
