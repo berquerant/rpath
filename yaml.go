@@ -23,6 +23,48 @@ var (
 type YamlQuery struct{}
 
 func (q *YamlQuery) Query(r io.Reader, p *Position) (*Result, error) {
+	nodeMaps, err := q.prepare(r, p)
+	if err != nil {
+		return nil, err
+	}
+
+	for i := range nodeMaps.maxIndex {
+		if nodeMap, ok := nodeMaps.get(i + 1); ok {
+			firstNode := nodeMap.SortedNodes()[0]
+			if p.Offset >= firstNode.Pos().Offset {
+				OnDebug(func() {
+					log.Printf("Ignore: Docs[%d], because offset %d is greater than docs[%d]'s first offset %d",
+						i, p.Offset, i+1, firstNode.Pos().Offset,
+					)
+				})
+				continue
+			}
+		}
+
+		nodeMap, _ := nodeMaps.get(i)
+		if x, ok := nodeMap.Find(p.Offset); ok {
+			meta := x.GetMeta(nodeMaps.content)
+			meta["char"] = fmt.Sprintf("%q", nodeMaps.content[p.Offset])
+			return &Result{
+				Path:     x.Left.Path(),
+				Position: p,
+				Left:     x.Left.Meta(),
+				Right:    x.Right.Meta(),
+				Meta:     meta,
+			}, nil
+		}
+	}
+
+	return nil, ErrNotFound
+}
+
+type yamlNodeMaps struct {
+	get      func(int) (*PathNodeMap, bool)
+	maxIndex int
+	content  []byte
+}
+
+func (*YamlQuery) prepare(r io.Reader, p *Position) (*yamlNodeMaps, error) {
 	content, err := io.ReadAll(r)
 	if err != nil {
 		return nil, err
@@ -36,67 +78,42 @@ func (q *YamlQuery) Query(r io.Reader, p *Position) (*Result, error) {
 		return nil, err
 	}
 
-	var (
-		nodeMaps   = make(map[int]*PathNodeMap, len(fileNode.Docs))
-		getNodeMap = func(index int) (*PathNodeMap, bool) {
-			if r, ok := nodeMaps[index]; ok {
-				return r, true
-			}
-			if index < 0 || index >= len(fileNode.Docs) {
-				return nil, false
-			}
-
-			nodeMap := NewPathNodeMap()
-			doc := fileNode.Docs[index]
-			for _, node := range newYAMLNodes(doc, yBytes) {
-				nodeMap.Add(node)
-			}
-			for _, node := range NewPathNodeComplementor(nodeMap).Complement() {
-				nodeMap.Add(node)
-			}
-			// add last node pair to tail of the document
-			// because the last node does not cover the range between the node and tail of the document
-			sortedNodes := nodeMap.SortedNodes()
-			lastNode := sortedNodes[len(sortedNodes)-1].Clone()
-			lastPosition := NewLastPosition(yBytes)
-			lastNode.Pos().Line = lastPosition.Line
-			lastNode.Pos().Column = lastPosition.Column
-			lastNode.Pos().Offset = lastPosition.Offset
-			nodeMap.Add(lastNode)
-
-			nodeMaps[index] = nodeMap
-			return nodeMap, true
+	nodeMaps := make(map[int]*PathNodeMap, len(fileNode.Docs))
+	get := func(index int) (*PathNodeMap, bool) {
+		if r, ok := nodeMaps[index]; ok {
+			return r, true
 		}
-	)
-
-	for i := range len(fileNode.Docs) {
-		nodeMap, _ := getNodeMap(i)
-		if nextNodeMap, ok := getNodeMap(i + 1); ok {
-			firstNode := nextNodeMap.SortedNodes()[0]
-			if p.Offset >= firstNode.Pos().Offset {
-				OnDebug(func() {
-					log.Printf("Ignore: Docs[%d], because offset %d is greater than docs[%d]'s first offset %d",
-						i, p.Offset, i+1, firstNode.Pos().Offset,
-					)
-				})
-				continue
-			}
+		if index < 0 || index >= len(fileNode.Docs) {
+			return nil, false
 		}
 
-		if x, ok := nodeMap.Find(p.Offset); ok {
-			meta := x.GetMeta(content)
-			meta["char"] = fmt.Sprintf("%q", content[p.Offset])
-			return &Result{
-				Path:     x.Left.Path(),
-				Position: p,
-				Left:     x.Left.Meta(),
-				Right:    x.Right.Meta(),
-				Meta:     meta,
-			}, nil
+		nodeMap := NewPathNodeMap()
+		doc := fileNode.Docs[index]
+		for _, node := range newYAMLNodes(doc, yBytes) {
+			nodeMap.Add(node)
 		}
+		for _, node := range NewPathNodeComplementor(nodeMap).Complement() {
+			nodeMap.Add(node)
+		}
+		// add last node pair to tail of the document
+		// because the last node does not cover the range between the node and tail of the document
+		sortedNodes := nodeMap.SortedNodes()
+		lastNode := sortedNodes[len(sortedNodes)-1].Clone()
+		lastPosition := NewLastPosition(yBytes)
+		lastNode.Pos().Line = lastPosition.Line
+		lastNode.Pos().Column = lastPosition.Column
+		lastNode.Pos().Offset = lastPosition.Offset
+		nodeMap.Add(lastNode)
+
+		nodeMaps[index] = nodeMap
+		return nodeMap, true
 	}
 
-	return nil, ErrNotFound
+	return &yamlNodeMaps{
+		get:      get,
+		maxIndex: len(fileNode.Docs),
+		content:  content,
+	}, nil
 }
 
 func newYAMLNodes(root ast.Node, bytes ybase.Bytes) []Node {
