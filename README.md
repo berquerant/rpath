@@ -59,6 +59,10 @@ EOS
 
 # Tasks
 
+## all
+
+Requires: lint, test, build
+
 ## test
 
 Run unit tests and e2e tests.
@@ -72,7 +76,18 @@ go test -v -cover -race ./...
 Build executable binary to `dist/rpath`.
 
 ``` sh
-go build -trimpath -v -o dist/rpath ./cmd/rpath
+./xc buildx "" ""
+```
+
+## buildx
+
+Build executable binary to `dist/rpath`.
+
+Inputs: os, arch
+``` sh
+goos=${os:-$(go env GOOS)}
+goarch=${arch:-$(go env GOARCH)}
+GOOS="$goos" GOARCH="$goarch" go build -trimpath -v -o dist/rpath ./cmd/rpath
 ```
 
 ## lint
@@ -95,4 +110,57 @@ Find vulnerabilities.
 
 ``` sh
 go run golang.org/x/vuln/cmd/govulncheck ./...
+```
+
+## docker
+
+Requires: docker-lint, docker-test, docker-build
+
+## docker-build
+
+Build executable binary to `dist/rpath`.
+
+``` sh
+export os="$(go env GOOS)"
+export arch="$(go env GOARCH)"
+./xc docker-buildx
+```
+
+## docker-buildx
+
+Build executable binary to `dist/rpath`.
+
+Inputs: os, arch
+``` sh
+docker build --progress plain --target build --build-arg os=$os --build-arg arch=$arch -o dist .
+```
+
+## docker-test
+
+Run unit tests and e2e tests.
+
+``` sh
+docker build --progress plain --target test .
+```
+
+## docker-lint
+
+Run linters.
+
+Requires: docker-vet, docker-vuln
+
+## docker-vet
+
+Examine code.
+
+``` sh
+docker build --progress plain --target vet .
+```
+
+## docker-vuln
+
+Find vulnerabilities.
+
+``` sh
+docker build --progress plain --target vuln .
 ```
