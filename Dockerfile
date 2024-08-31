@@ -1,28 +1,29 @@
-FROM golang:1.22.5 AS dev
+ARG GO_VERSION=1.22.5
+
+FROM golang:${GO_VERSION} AS dev
 WORKDIR /app
-COPY *.go go.mod go.sum xc README.md /app/
-COPY cmd/ /app/cmd
+COPY . /app
 RUN go mod download
 
-FROM golang:1.22.5 AS vuln
+FROM golang:${GO_VERSION} AS vuln
 WORKDIR /app
 COPY --from=dev /go/ /go
 COPY --from=dev /app/ /app
 RUN ./xc vuln
 
-FROM golang:1.22.5 AS vet
+FROM golang:${GO_VERSION} AS vet
 WORKDIR /app
 COPY --from=dev /go/ /go
 COPY --from=dev /app/ /app
 RUN ./xc vet
 
-FROM golang:1.22.5 AS test
+FROM golang:${GO_VERSION} AS test
 WORKDIR /app
 COPY --from=dev /go/ /go
 COPY --from=dev /app/ /app
 RUN ./xc test
 
-FROM golang:1.22.5 AS build-body
+FROM golang:${GO_VERSION} AS build-body
 ARG os
 ARG arch
 ENV os=$os
