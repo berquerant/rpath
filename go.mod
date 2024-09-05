@@ -1,6 +1,7 @@
 module github.com/berquerant/rpath
 
-go 1.22.5
+go 1.23.0
+
 require (
 	github.com/berquerant/jsonast v0.2.1
 	github.com/berquerant/ybase v0.4.0
