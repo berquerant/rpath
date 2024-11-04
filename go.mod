@@ -5,7 +5,7 @@ go 1.23.0
 require (
 	github.com/berquerant/jsonast v0.2.1
 	github.com/berquerant/ybase v0.6.3
-	github.com/goccy/go-yaml v1.12.0
+	github.com/goccy/go-yaml v1.13.4
 	github.com/joerdav/xc v0.8.5
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/vuln v1.1.3
@@ -21,7 +21,7 @@ require (
 	github.com/charmbracelet/lipgloss v0.7.1 // indirect
 	github.com/containerd/console v1.0.4-0.20230313162750-1ae8d489ac81 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/fatih/color v1.17.0 // indirect
+	github.com/fatih/color v1.18.0 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
@@ -41,13 +41,12 @@ require (
 	github.com/rogpeppe/go-internal v1.11.0 // indirect
 	github.com/sahilm/fuzzy v0.1.0 // indirect
 	golang.org/x/mod v0.19.0 // indirect
-	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/sys v0.22.0 // indirect
+	golang.org/x/sync v0.8.0 // indirect
+	golang.org/x/sys v0.26.0 // indirect
 	golang.org/x/telemetry v0.0.0-20240712210958-268b4a8ec2d7 // indirect
 	golang.org/x/term v0.8.0 // indirect
-	golang.org/x/text v0.3.8 // indirect
+	golang.org/x/text v0.19.0 // indirect
 	golang.org/x/tools v0.23.0 // indirect
-	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	mvdan.cc/sh/v3 v3.7.0 // indirect
