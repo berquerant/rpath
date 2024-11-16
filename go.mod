@@ -3,7 +3,7 @@ module github.com/berquerant/rpath
 go 1.23.0
 
 require (
-	github.com/berquerant/jsonast v0.2.1
+	github.com/berquerant/jsonast v0.3.0
 	github.com/berquerant/ybase v0.6.3
 	github.com/goccy/go-yaml v1.13.7
 	github.com/joerdav/xc v0.8.5
