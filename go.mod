@@ -5,7 +5,7 @@ go 1.23.0
 require (
 	github.com/berquerant/jsonast v0.3.0
 	github.com/berquerant/ybase v0.6.3
-	github.com/goccy/go-yaml v1.13.7
+	github.com/goccy/go-yaml v1.14.3
 	github.com/joerdav/xc v0.8.5
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/vuln v1.1.3
