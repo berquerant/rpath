@@ -8,7 +8,7 @@ require (
 	github.com/goccy/go-yaml v1.15.13
 	github.com/joerdav/xc v0.8.5
 	github.com/stretchr/testify v1.10.0
-	golang.org/x/vuln v1.1.3
+	golang.org/x/vuln v1.1.4
 )
 
 require (
@@ -38,13 +38,13 @@ require (
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.11.0 // indirect
 	github.com/sahilm/fuzzy v0.1.0 // indirect
-	golang.org/x/mod v0.19.0 // indirect
-	golang.org/x/sync v0.8.0 // indirect
-	golang.org/x/sys v0.26.0 // indirect
+	golang.org/x/mod v0.22.0 // indirect
+	golang.org/x/sync v0.10.0 // indirect
+	golang.org/x/sys v0.29.0 // indirect
 	golang.org/x/telemetry v0.0.0-20240712210958-268b4a8ec2d7 // indirect
 	golang.org/x/term v0.8.0 // indirect
 	golang.org/x/text v0.19.0 // indirect
-	golang.org/x/tools v0.23.0 // indirect
+	golang.org/x/tools v0.29.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	mvdan.cc/sh/v3 v3.7.0 // indirect
