@@ -12,8 +12,8 @@ github.com/berquerant/jsonast v0.3.0 h1:hvi0WTHbUoGxF2X9cAHw6ta/0cN+daQsj+z73FE6
 github.com/berquerant/jsonast v0.3.0/go.mod h1:W7HvRvEIXniR9BwAPTXkLJ+0deB7H3a2eNdMhPaRCqg=
 github.com/berquerant/marker v0.2.1 h1:0mW3L5k0He6sK+vWSbzy3c+UvhPHUWdes9JAskNtwKU=
 github.com/berquerant/marker v0.2.1/go.mod h1:o6ZvHIXMAmjDnFkWYQCuu8yDCrKdV6Rqp6BpH9S80n8=
-github.com/berquerant/ybase v0.6.3 h1:+4bWr2eN7u+u8C7Qni3xOahwwBkfBdgU4iCbrHree/I=
-github.com/berquerant/ybase v0.6.3/go.mod h1:JI3EmpvawDBlgLd6JPej8RD/Z733vanfMfCxAmgjYb8=
+github.com/berquerant/ybase v0.7.0 h1:w4cQi+SX8ugdxuMT3V6UzyyTFyEb+TV7khJxgZrF3MA=
+github.com/berquerant/ybase v0.7.0/go.mod h1:+LlE0X6wUYFaQBm1Giq4kV4kQ5VfZ7JKpEyupi+oWMA=
 github.com/charmbracelet/bubbles v0.16.1 h1:6uzpAAaT9ZqKssntbvZMlksWHruQLNxg49H5WdeuYSY=
 github.com/charmbracelet/bubbles v0.16.1/go.mod h1:2QCp9LFlEsBQMvIYERr7Ww2H2bA7xen1idUDIzm/+Xc=
 github.com/charmbracelet/bubbletea v0.24.2 h1:uaQIKx9Ai6Gdh5zpTbGiWpytMU+CfsPp06RaW2cx/SY=
