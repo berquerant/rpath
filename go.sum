@@ -8,10 +8,8 @@ github.com/atotto/clipboard v0.1.4 h1:EH0zSVneZPSuFR11BlR9YppQTVDbh5+16AmcJi4g1z
 github.com/atotto/clipboard v0.1.4/go.mod h1:ZY9tmq7sm5xIbd9bOK4onWV4S6X0u6GY7Vn0Yu86PYI=
 github.com/aymanbagabas/go-osc52/v2 v2.0.1 h1:HwpRHbFMcZLEVr42D4p7XBqjyuxQH5SMiErDT4WkJ2k=
 github.com/aymanbagabas/go-osc52/v2 v2.0.1/go.mod h1:uYgXzlJ7ZpABp8OJ+exZzJJhRNQ2ASbcXHWsFqH8hp8=
-github.com/berquerant/jsonast v0.3.0 h1:hvi0WTHbUoGxF2X9cAHw6ta/0cN+daQsj+z73FE6ua8=
-github.com/berquerant/jsonast v0.3.0/go.mod h1:W7HvRvEIXniR9BwAPTXkLJ+0deB7H3a2eNdMhPaRCqg=
-github.com/berquerant/marker v0.2.1 h1:0mW3L5k0He6sK+vWSbzy3c+UvhPHUWdes9JAskNtwKU=
-github.com/berquerant/marker v0.2.1/go.mod h1:o6ZvHIXMAmjDnFkWYQCuu8yDCrKdV6Rqp6BpH9S80n8=
+github.com/berquerant/jsonast v0.4.0 h1:Rz8lb1fSXBSyLA/A+JHN8CUKEtEkCy+bBNd3BqvWto8=
+github.com/berquerant/jsonast v0.4.0/go.mod h1:ak0Uvw9tE7mOkUPGO4i83SCLepbSp0y2Vcu2qT//VHg=
 github.com/berquerant/ybase v0.7.0 h1:w4cQi+SX8ugdxuMT3V6UzyyTFyEb+TV7khJxgZrF3MA=
 github.com/berquerant/ybase v0.7.0/go.mod h1:+LlE0X6wUYFaQBm1Giq4kV4kQ5VfZ7JKpEyupi+oWMA=
 github.com/charmbracelet/bubbles v0.16.1 h1:6uzpAAaT9ZqKssntbvZMlksWHruQLNxg49H5WdeuYSY=
