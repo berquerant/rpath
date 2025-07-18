@@ -4,7 +4,7 @@ go 1.24.4
 
 require (
 	github.com/berquerant/jsonast v0.4.10
-	github.com/berquerant/ybase v0.7.0
+	github.com/berquerant/ybase v0.7.1
 	github.com/goccy/go-yaml v1.18.0
 	github.com/stretchr/testify v1.10.0
 )
