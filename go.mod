@@ -3,14 +3,14 @@ module github.com/berquerant/rpath
 go 1.24.4
 
 require (
-	github.com/berquerant/jsonast v0.4.0
+	github.com/berquerant/jsonast v0.4.10
 	github.com/berquerant/ybase v0.7.1
 	github.com/goccy/go-yaml v1.18.0
 	github.com/stretchr/testify v1.10.0
 )
 
 require (
-	github.com/alecthomas/participle/v2 v2.1.1 // indirect
+	github.com/alecthomas/participle/v2 v2.1.4 // indirect
 	github.com/atotto/clipboard v0.1.4 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/charmbracelet/bubbles v0.16.1 // indirect
