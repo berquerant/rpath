@@ -1,10 +1,10 @@
 module github.com/berquerant/rpath
 
-go 1.24.4
+go 1.25.0
 
 require (
 	github.com/berquerant/jsonast v0.4.10
-	github.com/berquerant/ybase v0.7.1
+	github.com/berquerant/ybase v0.8.0
 	github.com/goccy/go-yaml v1.18.0
 	github.com/stretchr/testify v1.11.1
 )
