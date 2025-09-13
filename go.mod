@@ -1,6 +1,6 @@
 module github.com/berquerant/rpath
 
-go 1.25.0
+go 1.25.1
 
 require (
 	github.com/berquerant/jsonast v0.4.10
